@@ -1,3 +1,6 @@
+// Tell Next.js this route is always dynamic (never statically generated)
+export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth }        from '@/lib/auth'
 import { connectDB }   from '@/lib/mongodb'
