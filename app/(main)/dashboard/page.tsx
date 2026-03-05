@@ -6,10 +6,12 @@ import Link          from 'next/link'
 
 export default async function DashboardPage() {
   const session = await auth()
-  if (!session) redirect('/login')
+  if (!session?.user?.id) redirect('/login')
+
+  const userId = session.user.id  // ← fix: extract before use
 
   await connectDB()
-  const jobs = await Job.find({ userId: session.user.id }).sort({ createdAt: -1 }).lean()
+  const jobs = await Job.find({ userId }).sort({ createdAt: -1 }).lean()
 
   const stats = {
     total:     jobs.length,
@@ -62,7 +64,6 @@ export default async function DashboardPage() {
             {recent.map((job) => (
               <div key={String(job._id)} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-3 min-w-0">
-                  {/* Avatar */}
                   <div className="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center shrink-0">
                     <span className="text-indigo-700 font-bold text-sm">
                       {job.company.charAt(0).toUpperCase()}

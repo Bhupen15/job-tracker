@@ -7,10 +7,12 @@ import JobCard       from '@/components/ui/JobCard'
 
 export default async function JobsPage() {
   const session = await auth()
-  if (!session) redirect('/login')
+  if (!session?.user?.id) redirect('/login')
+
+  const userId = session.user.id  // ← fix: extract before use
 
   await connectDB()
-  const jobs = await Job.find({ userId: session.user.id }).sort({ createdAt: -1 }).lean()
+  const jobs = await Job.find({ userId }).sort({ createdAt: -1 }).lean()
 
   return (
     <div>

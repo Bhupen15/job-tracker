@@ -11,15 +11,15 @@ export default async function EditJobPage({
   params: Promise<{ id: string }>
 }) {
   const session = await auth()
-  if (!session) redirect('/login')
+  if (!session?.user?.id) redirect('/login')
 
+  const userId = session.user.id  // ← fix: extract before use
   const { id } = await params
-  await connectDB()
 
-  const job = await Job.findOne({ _id: id, userId: session.user.id }).lean()
+  await connectDB()
+  const job = await Job.findOne({ _id: id, userId }).lean()
   if (!job) notFound()
 
-  // Bind id so the action knows which job to update
   const updateThisJob = updateJob.bind(null, id)
 
   return (

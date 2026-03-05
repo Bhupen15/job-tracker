@@ -54,3 +54,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   session: { strategy: 'jwt' },
 })
+
+// Helper type — use this instead of raw session
+export type AuthSession = {
+  user: {
+    id: string
+    name?: string | null
+    email?: string | null
+  }
+}
