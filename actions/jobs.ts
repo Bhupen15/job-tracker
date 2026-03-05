@@ -13,7 +13,7 @@ async function requireAuth() {
 }
 
 // ── CREATE ───────────────────────────────────────────────────
-export async function createJob(formData: FormData) {
+export async function createJob(formData: FormData): Promise<void> {
   const session = await requireAuth()
 
   const company  = (formData.get('company')  as string)?.trim()
@@ -24,7 +24,7 @@ export async function createJob(formData: FormData) {
   const notes    = (formData.get('notes')    as string)?.trim()
   const status   = (formData.get('status')   as string) || 'applied'
 
-  if (!company || !role) return { error: 'Company and Role are required' }
+  if (!company || !role) return  // just return void on error
 
   await connectDB()
   await Job.create({ userId: session.user.id, company, role, location, salary, url, notes, status })
@@ -35,7 +35,7 @@ export async function createJob(formData: FormData) {
 }
 
 // ── UPDATE ───────────────────────────────────────────────────
-export async function updateJob(id: string, formData: FormData) {
+export async function updateJob(id: string, formData: FormData): Promise<void> {
   const session = await requireAuth()
 
   await connectDB()
@@ -58,7 +58,7 @@ export async function updateJob(id: string, formData: FormData) {
 }
 
 // ── UPDATE STATUS ONLY ───────────────────────────────────────
-export async function updateJobStatus(id: string, status: string) {
+export async function updateJobStatus(id: string, status: string): Promise<void> {
   const session = await requireAuth()
 
   await connectDB()
@@ -69,7 +69,7 @@ export async function updateJobStatus(id: string, status: string) {
 }
 
 // ── DELETE ───────────────────────────────────────────────────
-export async function deleteJob(id: string) {
+export async function deleteJob(id: string): Promise<void> {
   const session = await requireAuth()
 
   await connectDB()

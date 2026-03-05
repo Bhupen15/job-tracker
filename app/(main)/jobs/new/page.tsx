@@ -1,6 +1,12 @@
 import { createJob } from '@/actions/jobs'
 import Link          from 'next/link'
 
+// Wrapper to match the form action type signature
+async function handleCreateJob(formData: FormData): Promise<void> {
+  'use server'
+  await createJob(formData)
+}
+
 export default function NewJobPage() {
   return (
     <div className="max-w-2xl">
@@ -13,8 +19,7 @@ export default function NewJobPage() {
       </div>
 
       <div className="card p-8">
-        {/* form action directly calls Server Action — no API route needed! */}
-        <form action={createJob} className="space-y-5">
+        <form action={handleCreateJob} className="space-y-5">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
