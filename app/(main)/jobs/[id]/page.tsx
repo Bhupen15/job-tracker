@@ -1,9 +1,10 @@
-import { auth }     from '@/lib/auth'
-import { connectDB } from '@/lib/mongodb'
-import Job           from '@/models/Job'
-import { updateJob } from '@/actions/jobs'
+import { auth }      from '@/lib/auth'
+import { connectDB }  from '@/lib/mongodb'
+import Job            from '@/models/Job'
+import { updateJob }  from '@/actions/jobs'
 import { redirect, notFound } from 'next/navigation'
-import Link          from 'next/link'
+import Link           from 'next/link'
+import type { IJobDocument } from '@/models/Job'
 
 export default async function EditJobPage({
   params,
@@ -13,11 +14,13 @@ export default async function EditJobPage({
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const userId = session.user.id  // ← fix: extract before use
+  const userId = session.user.id
   const { id } = await params
 
   await connectDB()
-  const job = await Job.findOne({ _id: id, userId }).lean()
+
+  // Cast lean() result so TypeScript knows the shape
+  const job = await Job.findOne({ _id: id, userId }).lean<IJobDocument>()
   if (!job) notFound()
 
   const updateThisJob = updateJob.bind(null, id)

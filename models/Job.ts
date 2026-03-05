@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
+// Export this so other files can use it as a type
 export interface IJobDocument extends Document {
   userId:    string
   company:   string
