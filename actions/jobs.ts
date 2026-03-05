@@ -9,7 +9,7 @@ import Job                from '@/models/Job'
 async function requireAuth() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
-  return session
+  return session as { user: { id: string; name?: string | null; email?: string | null } }
 }
 
 // ── CREATE ───────────────────────────────────────────────────
